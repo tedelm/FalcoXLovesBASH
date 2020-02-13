@@ -16,3 +16,18 @@ bash FalcoXLovesBash.sh
 Get-FalcoXLocalConfig miniSquad_4inch_4s_falcoX_Alpha_v0.10.txt
 ```
 <img src='https://github.com/tedelm/FalcoXLovesBASH/blob/master/img/GetFalcoXLocal_1.PNG'>
+
+
+
+## To Do list...
+- [ ]  Create Serial interface
+- [ ]  Create "Get-FalcoXLocalConfig" functionality (50%)
+- [ ]  Create "Set-FalcoXLocalConfig" functionality
+- [ ]  Create Set-FalcoXConfig functionality
+- [ ]  Create Get-FalcoXConfig functionality
+- [ ]  Create Restore-FalcoXConfig functionality
+- [ ]  Create Backup-FalcoXConfig functionality
+- [ ]  Add Esc protocol lookup
+- [ ]  VTX channel mapping
+- [ ]  Cli: Version
+- [ ]  Speed up restore cmdlet
