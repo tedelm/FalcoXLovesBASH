@@ -15,3 +15,4 @@ Open bash and run
 bash FalcoXLovesBash.sh
 Get-FalcoXLocalConfig miniSquad_4inch_4s_falcoX_Alpha_v0.10.txt
 ```
+<img src='https://github.com/tedelm/FalcoXLovesBASH/blob/master/img/GetFalcoXLocal_1.PNG'>
