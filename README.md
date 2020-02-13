@@ -3,8 +3,11 @@ Configurator for FalcoX in Bash
 
 
 ## Installation/Download
-
-
+Download FalcoXLovesBash.sh </br>
+Open bash and run the following to download
+```bash
+wget https://raw.githubusercontent.com/tedelm/FalcoXLovesBASH/master/FalcoXLovesBASH.sh
+```
 
 ## Offline: Get settings from config dump
 Open bash and run
