@@ -149,7 +149,7 @@ Get-FalcoXLocalHTMLReport () {
     </style>
     </head>
     <body>
-    <table class= 'Default'>
+    <table class='Default'>
         <tr>
             <th>$VersionOutput</th><th></th><th></th><th>ROLL</th><th>PITCH</th><th>YAW</th><th>TPA</th><th>P</th><th>I</th><th>D</th>
         </tr>      
@@ -184,7 +184,7 @@ Get-FalcoXLocalHTMLReport () {
             <td class= 'td_headline'>AA STRENGTH</td><td>${FalcoXSettings[aa_strength]}</td><td class= 'td_headline'>Idle %</td><td>${FalcoXSettings[idle_percent]}</td><td></td><td></td><td>90%</td><td>${FalcoXSettings[p_curve9]}</td><td>${FalcoXSettings[i_curve9]}</td><td>${FalcoXSettings[d_curve9]}</td>
         </tr>		
         <tr>
-            <td class= 'td_headline'>DYNAMIC FILT STRENGTH</td><td>${FalcoXSettings[dynLpfScale]}</td><td class= 'td_headline'>ESC proto</td><td>$(Get-FalcoXESCMapping ${FalcoXSettings[esc_protocol]})</td><td></td><td></td><td>100%</td><td>${FalcoXSettings[p_curve10]}</td><td>${FalcoXSettings[i_curve10]}</td><td>${FalcoXSettings[d_curve10]}</td>
+            <td class= 'td_headline'>DYNAMIC FILT STRENGTH</td><td>${FalcoXSettings[dynLpfcale]}</td><td class= 'td_headline'>ESC proto</td><td>$(Get-FalcoXESCMapping ${FalcoXSettings[esc_protocol]})</td><td></td><td></td><td>100%</td><td>${FalcoXSettings[p_curve10]}</td><td>${FalcoXSettings[i_curve10]}</td><td>${FalcoXSettings[d_curve10]}</td>
         </tr>       			
     </table>" > FalcoXHTMLReport.html
 
