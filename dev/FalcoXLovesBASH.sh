@@ -81,6 +81,123 @@ Get-FalcoXLocalConfig () {
 
 #Get-FalcoXLocalConfig miniSquad_4inch_4s_falcoX_Alpha_v0.10.txt
 
+
+Get-FalcoXLocalHTMLReport () {
+    falcoxDump="${1}" # $1 represent first argument
+    value2="${2}" # $2 represent second argument
+
+    TextParse="$(cat $falcoxDump | tr -d SET | tr -d ][ | tr -d \",\")"
+
+    IFS='"," ' #split string
+    read -ra ADDR <<< "$TextParse" # str is read into an array as tokens separated by IFS
+
+    #Create key/value hash
+    declare -A FalcoXSettings
+
+    for i in "${ADDR[@]}"; do # access each element of array
+        #echo "$i"
+
+        IFS='=' #split string
+        read -ra FalcoXSetting <<< "$i"
+
+        FalcoXSettings+=( ["${FalcoXSetting[0]}"]="${FalcoXSetting[1]}" )
+    done
+
+            if [ ${FalcoXSettings[use_simmode]} = 1 ]; then
+                SimmodeEnabled="True"
+            else
+                SimmodeEnabled="False"
+            fi
+            if [ ${FalcoXSettings[use_whisper]} = 1 ]; then
+                WhisperEnabled="True"
+            else
+                WhisperEnabled="False"
+            fi
+            if [ ${FalcoXSettings[use_dyn_aa]} = 1 ]; then
+                DynamicAAEnabled="True"
+            else
+                DynamicAAEnabled="False"
+            fi
+
+
+    #Create HTML
+    echo "
+    <html>
+    <head>
+    <title>FalcoXHtmlReport</title>
+    <style>
+    table.default {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    border: 1px solid black;
+    }
+    th.th_headline {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 15px;
+    font-weight: bold;
+    }
+    td.td_headline {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 15px;
+    font-weight: bold;
+    }
+    td {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 15px;
+    border: 1px solid black;
+    }
+    </style>
+    </head>
+    <body>
+    <table class= 'Default'>
+        <tr>
+            <th>$VersionOutput</th><th></th><th></th><th>ROLL</th><th>PITCH</th><th>YAW</th><th>TPA</th><th>P</th><th>I</th><th>D</th>
+        </tr>      
+        <tr>
+            <td class= 'td_headline'>FILT1</td><td>$(Get-FalcoXFilter ${FalcoXSettings[filt1_type]})</td><td class= 'td_headline' align='center'>P</td><td>${FalcoXSettings[roll_p]}</td><td>${FalcoXSettings[pitch_p]}</td><td>${FalcoXSettings[yaw_p]}</td><td>0%</td><td>${FalcoXSettings[p_curve0]}</td><td>${FalcoXSettings[i_curve0]}</td><td>${FalcoXSettings[d_curve0]}</td>
+        </tr>
+        <tr>
+            <td class= 'td_headline'>FILT2</td><td>$(Get-FalcoXFilter ${FalcoXSettings[filt2_type]})</td><td class= 'td_headline' align='center'>I</td><td>${FalcoXSettings[roll_i]}</td><td>${FalcoXSettings[pitch_i]}</td><td>${FalcoXSettings[yaw_i]}</td><td>10%</td><td>${FalcoXSettings[p_curve1]}</td><td>${FalcoXSettings[i_curve1]}</td><td>${FalcoXSettings[d_curve1]}</td>
+        </tr>
+        <tr>
+            <td class= 'td_headline'>DFILT1</td><td>$(Get-FalcoXFilter ${FalcoXSettings[dfilt1_type]})</td><td class= 'td_headline' align='center'>D</td><td>${FalcoXSettings[roll_d]}</td><td>${FalcoXSettings[pitch_d]}</td><td>${FalcoXSettings[yaw_d]}</td><td>20%</td><td>${FalcoXSettings[p_curve2]}</td><td>${FalcoXSettings[i_curve2]}</td><td>${FalcoXSettings[d_curve2]}</td>
+        </tr>
+        <tr>
+            <td class= 'td_headline'>DFILT2</td><td>$(Get-FalcoXFilter ${FalcoXSettings[dfilt2_type]})</td><td></td><td></td><td></td><td></td><td>30%</td><td>${FalcoXSettings[p_curve3]}</td><td>${FalcoXSettings[i_curve3]}</td><td>${FalcoXSettings[d_curve3]}</td>
+        </tr>
+        <tr>
+            <td class= 'td_headline'>FILT1 (Hz)</td><td>${FalcoXSettings[filt1_freq]}</td><td class= 'td_headline'>SIM</td><td>$SimmodeEnabled</td><td></td><td></td><td>40%</td><td>${FalcoXSettings[p_curve4]}</td><td>${FalcoXSettings[i_curve4]}</td><td>${FalcoXSettings[d_curve4]}</td>
+        </tr>
+        <tr>
+            <td class= 'td_headline'>FILT2 (Hz)</td><td>${FalcoXSettings[filt2_freq]}</td><td class= 'td_headline'>SIM BOOST</td><td>${FalcoXSettings[sim_boost]}</td><td></td><td></td><td>50%</td><td>${FalcoXSettings[p_curve5]}</td><td>${FalcoXSettings[i_curve5]}</td><td>${FalcoXSettings[d_curve5]}</td>
+        </tr>
+        <tr>
+            <td class= 'td_headline'>DFILT1 (Hz)</td><td>${FalcoXSettings[dfilt1_freq]}</td><td class= 'td_headline'>WHISPER</td><td>$WhisperEnabled</td><td></td><td></td><td>60%</td><td>${FalcoXSettings[p_curve6]}</td><td>${FalcoXSettings[i_curve6]}</td><td>${FalcoXSettings[d_curve6]}</td>
+        </tr>
+        <tr>
+            <td class= 'td_headline'>DFILT2 (Hz)</td><td>${FalcoXSettings[dfilt2_freq]}</td><td class= 'td_headline'>CG COMP</td><td>${FalcoXSettings[cg_comp]}</td><td></td><td></td><td>70%</td><td>${FalcoXSettings[p_curve7]}</td><td>${FalcoXSettings[i_curve7]}</td><td>${FalcoXSettings[d_curve7]}</td>
+        </tr>
+        <tr>
+            <td class= 'td_headline'>DYNAMIC AA</td><td>$DynamicAAEnabled</td><td class= 'td_headline'>SMOOTH STOP</td><td>${FalcoXSettings[smooth_stop]}</td><td></td><td></td><td>80%</td><td>${FalcoXSettings[p_curve8]}</td><td>${FalcoXSettings[i_curve8]}</td><td>${FalcoXSettings[d_curve8]}</td>
+        </tr>
+        <tr>
+            <td class= 'td_headline'>AA STRENGTH</td><td>${FalcoXSettings[aa_strength]}</td><td class= 'td_headline'>Idle %</td><td>${FalcoXSettings[idle_percent]}</td><td></td><td></td><td>90%</td><td>${FalcoXSettings[p_curve9]}</td><td>${FalcoXSettings[i_curve9]}</td><td>${FalcoXSettings[d_curve9]}</td>
+        </tr>		
+        <tr>
+            <td class= 'td_headline'>DYNAMIC FILT STRENGTH</td><td>${FalcoXSettings[dynLpfScale]}</td><td class= 'td_headline'>ESC proto</td><td>$(Get-FalcoXESCMapping ${FalcoXSettings[esc_protocol]})</td><td></td><td></td><td>100%</td><td>${FalcoXSettings[p_curve10]}</td><td>${FalcoXSettings[i_curve10]}</td><td>${FalcoXSettings[d_curve10]}</td>
+        </tr>       			
+    </table>" > FalcoXHTMLReport.html
+
+    echo "Report exported to FalcoXHTMLReport.html"
+    #xdg-open FalcoXHTMLReport.html
+}
+
+
+
+
+
+
+
 #FilterMapping
 Get-FalcoXFilter () {
 

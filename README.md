@@ -17,6 +17,14 @@ Get-FalcoXLocalConfig miniSquad_4inch_4s_falcoX_Alpha_v0.10.txt
 ```
 <img src='https://github.com/tedelm/FalcoXLovesBASH/blob/master/img/GetFalcoXLocal_1.PNG'>
 
+## Offline: Get settings from config dump in a HTLM file
+Open bash and run
+```bash
+bash FalcoXLovesBash.sh
+Get-FalcoXLocalHTLMReport miniSquad_4inch_4s_falcoX_Alpha_v0.10.txt
+```
+<img src='https://github.com/tedelm/FalcoXLovesBASH/blob/master/img/GetFalcoXLocalHTMLReport_0.PNG'></br>
+<img src='https://github.com/tedelm/FalcoXLovesBASH/blob/master/img/GetFalcoXLocalHTMLReport_1.PNG'>
 
 
 ## To Do list...
