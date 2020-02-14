@@ -1,0 +1,25 @@
+###### Serial communication ##########
+
+sudo touch /etc/udev/rules.d/20-microontroller.rules
+sudo echo 'SUBSYSTEM=="tty", ATTRS{idVendor}=="0483", ATTRS{idProduct}=="5740", ATTRS{serial}=="540489539", SYMLINK+="ttyS99"' > /etc/udev/rules.d/20-microontroller.rules
+service udev restart
+sudo usermod -a -G dialout mrteel
+
+########## install ########
+
+sudo apt-get install screen
+sudo apt-get install expect
+
+########### Comport script #####################
+
+
+#!/usr/bin/expect -f
+spawn screen /dev/ttyS99 9600
+"dump\r"
+expect "ok"
+send "exit\r"
+# chmod 755 comport.sh
+# ./comport.sh > file.txt
+
+
+#############################
