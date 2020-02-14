@@ -15,8 +15,8 @@ sudo apt-get install expect
 
 #!/usr/bin/expect -f
 spawn screen /dev/ttyS99 9600
-"dump\r"
-expect "ok"
+send "dump\r"
+expect "# Ok"
 send "exit\r"
 # chmod 755 comport.sh
 # ./comport.sh > file.txt
