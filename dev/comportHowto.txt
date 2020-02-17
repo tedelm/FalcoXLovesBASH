@@ -5,76 +5,39 @@ sudo echo 'SUBSYSTEM=="tty", ATTRS{idVendor}=="0483", ATTRS{idProduct}=="5740", 
 service udev restart
 sudo usermod -a -G dialout mrteel
 
-########## install ########
+#############################
+stty -F /dev/ttyS99 115200
+stty -F /dev/ttyS99 crtscts
+#############################
 
-sudo apt-get install screen
-sudo apt-get install expect
+echo "dump" > /dev/ttyS99 && cat /dev/ttyS99 | head -n 208 > falcodump.txt
 
-########### Comport script #####################
+###########  Script  #################
 
+#!/bin/bash
+stty -F /dev/ttyS99 115200
+stty -F /dev/ttyS99 crtscts
 
-#!/usr/bin/expect -f
-spawn screen /dev/ttyS99 9600
-send "dump\r"
-expect "# Ok"
-send "exit\r"
-# chmod 755 comport.sh
-# ./comport.sh > file.txt
+echo "dump" > /dev/ttyS99 && cat /dev/ttyS99 | head -n 208 > falcodump.txt
 
-
-########### Create array from output - example 1#################
-
-echo "dump" > /dev/ttyS99
-while read line; 
-do 
-    echo $line 
-done < /dev/ttyS99
-
-
-########### Create array from output - example 2 #################
-echo "dump" > /dev/ttyS99
-while IFS= read -r line
-do
-  echo "$line"
-done <<< cat /dev/ttyS99
-
-
-########### Create array from output - example 3 ###############
-echo "dump" > /dev/ttyS99
-read -ra DumpArray <<< cat /dev/ttyS99
-
-########### Create array from output - example 4 #################
-inputfile="miniSquad_4inch_4s_falcoX_Alpha_v0.10.txt"
-input=$(cat $inputfile | tr -d SET | tr -d ][ | tr -d \",\")
-#input=$(cat $inputfile)
-
+TextParse=$(cat falcodump.txt | tr -d "SET " | tr -d ][ | tr -d \",\")
+#Create key/value hash
 declare -A FalcoXSettings
 
-while read line
-do
-    IFS='='
-    read -ra DumpArray <<< "$line"
-    FalcoXSettings+=( ["${DumpArray[0]}"]="${DumpArray[1]}" )
-done <<< $input
+for i in "$TextParse"; do # access each element of array
+    echo "$i"
+    IFS='=' #split string
+    read -ra FalcoXSetting <<< "$i"
 
-echo "${FalcoXSettings[roll_p]}"
+    FalcoXSettings+=( ["${FalcoXSetting[0]}"]="${FalcoXSetting[1]}" )
+done
+    #PIDs
+echo "-- PIDs ---"
+echo "       P     I     D "
+echo "Roll:  ${FalcoXSettings[roll_p]},  ${FalcoXSettings[roll_i]},  ${FalcoXSettings[roll_d]}"
+echo "Pitch: ${FalcoXSettings[pitch_p]},  ${FalcoXSettings[pitch_i]},  ${FalcoXSettings[pitch_d]}"
+echo "Yaw:   ${FalcoXSettings[yaw_p]},  ${FalcoXSettings[yaw_i]},  ${FalcoXSettings[yaw_d]}"
 
-########### Create array from output - example 4 #################
-    TextParse="$(cat miniSquad_4inch_4s_falcoX_Alpha_v0.10.txt | tr -d SET | tr -d ][ | tr -d \",\")"
 
-    IFS='"," ' #split string
-    read -ra ADDR <<< "$TextParse" # str is read into an array as tokens separated by IFS
 
-    #Create key/value hash
-    declare -A FalcoXSettings
-
-    for i in "${ADDR[@]}"; do # access each element of array
-        #echo "$i"
-
-        IFS='=' #split string
-        read -ra FalcoXSetting <<< "$i"
-
-        FalcoXSettings+=( ["${FalcoXSetting[0]}"]="${FalcoXSetting[1]}" )
-    done
-
-echo "${FalcoXSettings[roll_p]}"
+################################
