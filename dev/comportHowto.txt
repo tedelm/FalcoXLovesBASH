@@ -31,3 +31,11 @@ while read line;
 do 
     echo $line 
 done < /dev/ttyS99
+
+
+############################
+echo "dump" > /dev/ttyS99
+while IFS= read -r line
+do
+  echo "$line"
+done < cat /dev/ttyS99
