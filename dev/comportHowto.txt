@@ -22,9 +22,7 @@ send "exit\r"
 # ./comport.sh > file.txt
 
 
-#############################
-
-Alternativ...
+########### Create array from output - example 1#################
 
 echo "dump" > /dev/ttyS99
 while read line; 
@@ -33,9 +31,50 @@ do
 done < /dev/ttyS99
 
 
-############################
+########### Create array from output - example 2 #################
 echo "dump" > /dev/ttyS99
 while IFS= read -r line
 do
   echo "$line"
-done < cat /dev/ttyS99
+done <<< cat /dev/ttyS99
+
+
+########### Create array from output - example 3 ###############
+echo "dump" > /dev/ttyS99
+read -ra DumpArray <<< cat /dev/ttyS99
+
+########### Create array from output - example 4 #################
+inputfile="miniSquad_4inch_4s_falcoX_Alpha_v0.10.txt"
+input=$(cat $inputfile | tr -d SET | tr -d ][ | tr -d \",\")
+#input=$(cat $inputfile)
+
+declare -A FalcoXSettings
+
+while read line
+do
+    IFS='='
+    read -ra DumpArray <<< "$line"
+    FalcoXSettings+=( ["${DumpArray[0]}"]="${DumpArray[1]}" )
+done <<< $input
+
+echo "${FalcoXSettings[roll_p]}"
+
+########### Create array from output - example 4 #################
+    TextParse="$(cat miniSquad_4inch_4s_falcoX_Alpha_v0.10.txt | tr -d SET | tr -d ][ | tr -d \",\")"
+
+    IFS='"," ' #split string
+    read -ra ADDR <<< "$TextParse" # str is read into an array as tokens separated by IFS
+
+    #Create key/value hash
+    declare -A FalcoXSettings
+
+    for i in "${ADDR[@]}"; do # access each element of array
+        #echo "$i"
+
+        IFS='=' #split string
+        read -ra FalcoXSetting <<< "$i"
+
+        FalcoXSettings+=( ["${FalcoXSetting[0]}"]="${FalcoXSetting[1]}" )
+    done
+
+echo "${FalcoXSettings[roll_p]}"
