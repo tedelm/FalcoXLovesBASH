@@ -27,4 +27,7 @@ send "exit\r"
 Alternativ...
 
 echo "dump" > /dev/ttyS99
-while read line; do echo $line done < /dev/ttyS99
+while read line; 
+do 
+    echo $line 
+done < /dev/ttyS99
